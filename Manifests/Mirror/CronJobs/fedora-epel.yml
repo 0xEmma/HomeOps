@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mirrorupdate-epel
+  namespace: default
+spec:
+  schedule: "35 */2 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 0
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mirrorupdate-epel
+            imagePullPolicy: Always
+            image: ghcr.io/0xemma/mirror-updater:v2.0.0
+            env:
+              - name: TARGET
+                value: /ext/mirror/epel
+              - name: SOURCE
+                value: rsync://mirrors.rit.edu/epel
+              - name: LASTUPDATE
+                value: http://rsync.repo.epel.org/epel/timestamp.txt
+              - name: FIRST
+                value: "no"
+            volumeMounts:
+            - name:  mirror-pvc
+              mountPath:  /ext/mirror/
+          restartPolicy: OnFailure
+          volumes:
+            - name: mirror-pvc
+              persistentVolumeClaim:
+                claimName: mirror-truenas

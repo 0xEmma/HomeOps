@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mirror-ubuntureleases
+  namespace: default
+  labels:
+    app: mirror-ubuntureleases
+    id: mirror-web
+  annotations:
+    operator.1password.io/auto-restart: "true"
+spec:
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: mirror-ubuntureleases
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mirror-ubuntureleases
+        id: mirror-web
+    spec:
+      containers:
+        - name: mirror-ubuntureleases
+          image: 0xemma/nginx-autoindex:json-4
+          resources:
+            limits:
+              memory: 8000Mi
+            requests:
+              cpu: 100m
+              memory: 8000Mi
+          volumeMounts:
+            - mountPath: /var/lib/nginx/html
+              name: mirror-pvc
+          env:
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AMPLIFY_API_KEY
+                  name: amplify-secret
+            - name: AMPLIFY_IMAGENAME
+              value: "ubuntu-iso"
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: mirror-pvc
+          persistentVolumeClaim:
+            claimName: mirror-ubuntu-iso

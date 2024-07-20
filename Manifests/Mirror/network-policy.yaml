@@ -1,0 +1,36 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: mirror-network-policy
+  namespace: default
+spec:
+  endpointSelector:
+    matchLabels:
+      id: mirror-web
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: traefik
+            io.kubernetes.pod.namespace: kube-system
+      toPorts:
+        - ports:
+            - port: "80"
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+    - toFQDNs:
+        - matchName: receiver.amplify.nginx.com
+      toPorts:
+        - ports:
+            - port: "443"
+        - ports:
+            - port: "80"

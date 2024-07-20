@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mirror-rsync
+  namespace: default
+  labels:
+    app: mirror-rsync
+spec:
+  selector:
+    matchLabels:
+      app: mirror-rsync
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mirror-rsync
+    spec:
+      # initContainers:
+      # Init containers are exactly like regular containers, except:
+      # - Init containers always run to completion.
+      # - Each init container must complete successfully before the next one starts.
+      containers:
+        - name: mirror-rsync
+          image: ghcr.io/0xemma/rsync-daemon-docker:v0.0.2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 1000m
+              memory: 1000Mi
+          ports:
+            - containerPort: 873
+              name: rsync
+          volumeMounts:
+            - name: config
+              mountPath: /config/
+            - name: mirror
+              mountPath: /mirror/
+            - name: ubuntu-iso
+              mountPath: /mnt/ubnt-iso
+            - name: kali-iso
+              mountPath: /mnt/kali-iso
+            - name: arch
+              mountPath: /mnt/arch
+            - name: alma
+              mountPath: /mnt/almalinux
+            - name: parrot
+              mountPath: /mnt/parrot
+            - name: kali
+              mountPath: /mnt/kali
+            - name: blackarch
+              mountPath: /mnt/blackarch
+      volumes:
+        - name: config
+          configMap:
+            name: rsync-config
+        - name: mirror
+          persistentVolumeClaim:
+            claimName: mirror-truenas
+        - name: ubuntu-iso
+          persistentVolumeClaim:
+            claimName: mirror-ubuntu-iso
+        - name: kali-iso
+          persistentVolumeClaim:
+            claimName: mirror-kali-images
+        - name: arch
+          persistentVolumeClaim:
+            claimName: mirror-arch
+        - name: alma
+          persistentVolumeClaim:
+            claimName: mirror-almalinux
+        - name: parrot
+          persistentVolumeClaim:
+            claimName: mirror-parrot
+        - name: kali
+          persistentVolumeClaim:
+            claimName: mirror-kali
+        - name: blackarch
+          persistentVolumeClaim:
+            claimName: mirror-blackarch
+      restartPolicy: Always

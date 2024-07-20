@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rsync-config
+  labels:
+    app: mirror-rsync
+data:
+  rsync.conf: |-
+    read only = yes
+    [arch]
+      path = /mnt/arch/arch
+      comment = Arch Mirror
+    [ubuntu]
+      path = /mirror/ubuntu
+      comment = Ubuntu Archive
+    [ubuntu-releases]
+      path = /mnt/ubnt-iso/ubuntu-releases
+      comment = Ubuntu ISO
+    [parrot]
+      path = /mnt/parrot/parrot
+      comment = Parrot
+    [parrot-iso]
+      path = /mnt/parrot/parrot
+      exclude = pool dists
+      comment = Parrot ISO
+    [blackarch]
+      path = /mnt/blackarch/blackarch
+      comment = BlackArch
+    [almalinux]
+      path = /mnt/almalinux/almalinux
+      comment = AlmaLinux
+    [kali]
+      path = /mnt/kali/
+      comment = Kali Repo
+    [kali-images]
+      path = /mnt/kali-iso/kali-images
+      comment = Kali Images
+    [stream]
+      path = /mirror/stream
+    [epel]
+      path = /mirror/epel
+    [void]
+      path = /mirror/voidlinux

@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mirror-epel
+  namespace: default
+  labels:
+    app: mirror-epel
+    id: mirror-web
+  annotations:
+    operator.1password.io/auto-restart: "true"
+spec:
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: mirror-epel
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mirror-epel
+        id: mirror-web
+    spec:
+      containers:
+        - name: mirror-epel
+          image: 0xemma/nginx-autoindex:json-4
+          resources:
+            limits:
+              memory: 16000Mi
+            requests:
+              cpu: 100m
+              memory: 15000Mi
+          env:
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: AMPLIFY_API_KEY
+                  name: amplify-secret
+            - name: AMPLIFY_IMAGENAME
+              value: "epel"
+          volumeMounts:
+            - mountPath: /var/lib/nginx/html
+              name: mirror-pvc
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: mirror-pvc
+          persistentVolumeClaim:
+            claimName: mirror-truenas

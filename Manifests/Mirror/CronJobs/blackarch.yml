@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mirrorupdate-blackarch
+  namespace: default
+spec:
+  schedule: "45 */5 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 0
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mirrorupdate-blackarch
+              imagePullPolicy: Always
+              image: ghcr.io/0xemma/mirror-updater:v1.0.0
+              env:
+                - name: TARGET
+                  value: /ext/mirror/blackarch
+                - name: SOURCE
+                  value: rsync://mirror.math.princeton.edu/pub/blackarch/
+                - name: LASTUPDATE
+                  value: https://mirror.math.princeton.edu/pub/blackarch/lastupdate
+              volumeMounts:
+                - name: mirror-pvc
+                  mountPath: /ext/mirror
+          restartPolicy: OnFailure
+          volumes:
+            - name: mirror-pvc
+              persistentVolumeClaim:
+                claimName: mirror-blackarch

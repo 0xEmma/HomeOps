@@ -1,0 +1,35 @@
+# apiVersion: batch/v1
+# kind: CronJob
+# metadata:
+#   name: mirrorupdate-voidlinux
+#   namespace: default
+# spec:
+#   schedule: "25 */3 * * *"
+#   successfulJobsHistoryLimit: 0
+#   failedJobsHistoryLimit: 0
+#   concurrencyPolicy: Forbid
+#   jobTemplate:
+#     spec:
+#       template:
+#         spec:
+#           containers:
+#           - name: mirrorupdate-voidlinux
+#             imagePullPolicy: Always
+#             image: ghcr.io/0xemma/mirror-updater:v2.0.0
+#             env:
+#               - name: TARGET
+#                 value: /ext/mirror/voidlinux
+#               - name: SOURCE
+#                 value: rsync://repo-sync.voidlinux.org/voidlinux
+#               - name: LASTUPDATE
+#                 value: http://rsync.repo.almalinux.org/almalinux/timestamp.txt
+#               - name: FIRST
+#                 value: "no"
+#             volumeMounts:
+#             - name:  mirror-pvc
+#               mountPath:  /ext/mirror/
+#           restartPolicy: OnFailure
+#           volumes:
+#             - name: mirror-pvc
+#               persistentVolumeClaim:
+#                 claimName: mirror-truenas

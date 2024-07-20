@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mirror-truenas
+  namespace: default
+  labels:
+    app: mirror-truenas
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 11000Gi
+  storageClassName: freenas-nfs-csi

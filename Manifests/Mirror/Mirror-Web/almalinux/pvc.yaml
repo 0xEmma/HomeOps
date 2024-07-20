@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mirror-almalinux
+  namespace: default
+  labels:
+    app: mirror-almalinux
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 750Gi

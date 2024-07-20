@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mirror-kali
+  namespace: default
+spec:
+  selector:
+    app: mirror-kali
+  ports:
+  - name: mirror-kali
+    protocol: TCP
+    port: 80
+    targetPort: 80

@@ -1,0 +1,31 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: mirror-ingress-tls-voidlinux
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`mirror.0xem.ma`) && PathPrefix(`/voidlinux`)
+      kind: Rule
+      services:
+        - name: mirror-voidlinux
+          kind: Service
+          port: 80
+  tls:
+    secretName: emma-tls
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: mirror-ingress-voidlinux
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`mirror.0xem.ma`) && PathPrefix(`/voidlinux`)
+      kind: Rule
+      services:
+        - name: mirror-voidlinux
+          kind: Service
+          port: 80

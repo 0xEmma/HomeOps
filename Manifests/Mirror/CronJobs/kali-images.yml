@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mirrorupdate-kali-images
+  namespace: default
+spec:
+  schedule: "0 */2 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 0
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mirrorupdate-kali
+              imagePullPolicy: Always
+              image: ghcr.io/0xemma/mirror-updater:v2.0.0
+              env:
+                - name: TARGET
+                  value: /ext/mirror/kali-images
+                - name: SOURCE
+                  value: rsync://kali.mirror.rafal.ca/kali-images
+                - name: LASTUPDATE
+                  value: https://mirrors.lug.mtu.edu/archlinux/lastupdate
+                - name: FIRST
+                  value: "not"
+              volumeMounts:
+                - name: mirror-pvc
+                  mountPath: /ext/mirror/
+          restartPolicy: OnFailure
+          volumes:
+            - name: mirror-pvc
+              persistentVolumeClaim:
+                claimName: mirror-kali-images

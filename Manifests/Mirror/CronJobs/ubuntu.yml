@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mirrorupdate-ubuntu
+  namespace: default
+spec:
+  schedule: "15 */6 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 0
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mirrorupdate-ubuntu
+            imagePullPolicy: Always
+            image: ghcr.io/0xemma/mirror-updater:v2.0.0
+            env:
+              - name: TARGET
+                value: /ext/mirror/ubuntu
+              - name: SOURCE
+                value: rsync://archive.ubuntu.com/ubuntu
+              - name: LASTUPDATE
+                value: https://mirror.math.princeton.edu/pub/blackarch/lastupdate
+              - name: FIRST
+                value: "not"
+            volumeMounts:
+            - name:  mirror-pvc
+              mountPath:  /ext/mirror/
+          restartPolicy: OnFailure
+          volumes:
+            - name: mirror-pvc
+              persistentVolumeClaim:
+                claimName: mirror-truenas

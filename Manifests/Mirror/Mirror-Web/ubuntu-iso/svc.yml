@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mirror-ubuntureleases
+  namespace: default
+spec:
+  selector:
+    app: mirror-ubuntureleases
+  ports:
+  - name: mirror-ubuntureleases
+    protocol: TCP
+    port: 80
+    targetPort: 80
