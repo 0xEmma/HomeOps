@@ -83,5 +83,5 @@ spec:
             claimName: mirror-kali
         - name: blackarch
           persistentVolumeClaim:
-            claimName: mirror-blackarch
+            claimName: mirror-blackarch-zfs
       restartPolicy: Always
