@@ -77,7 +77,7 @@ spec:
             claimName: mirror-almalinux-rbd
         - name: parrot
           persistentVolumeClaim:
-            claimName: mirror-parrot
+            claimName: mirror-parrot-zfs
         - name: kali
           persistentVolumeClaim:
             claimName: mirror-kali
