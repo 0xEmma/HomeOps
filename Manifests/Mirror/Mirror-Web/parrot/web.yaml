@@ -56,4 +56,4 @@ spec:
       volumes:
         - name: mirror-pvc
           persistentVolumeClaim:
-            claimName: mirror-parrot-zfs
+            claimName: mirror-parrot
