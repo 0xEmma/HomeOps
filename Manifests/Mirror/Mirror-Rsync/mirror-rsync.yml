@@ -74,7 +74,7 @@ spec:
             claimName: mirror-arch
         - name: alma
           persistentVolumeClaim:
-            claimName: mirror-almalinux-rbd
+            claimName: mirror-almalinux-zfs
         - name: parrot
           persistentVolumeClaim:
             claimName: mirror-parrot-zfs
