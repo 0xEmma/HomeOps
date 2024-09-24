@@ -44,7 +44,7 @@ spec:
               value: "rockylinux"
           volumeMounts:
             - mountPath: /var/lib/nginx/html
-              name: mirror-rockylinux
+              name: mirror-pvc
           ports:
             - containerPort: 80
           readinessProbe:
