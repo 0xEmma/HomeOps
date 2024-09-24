@@ -1,0 +1,35 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mirrorupdate-rockylinux
+  namespace: default
+spec:
+  schedule: "48 */5 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 0
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mirrorupdate-rockylinux
+              imagePullPolicy: Always
+              image: ghcr.io/0xemma/mirror-updater:v2.0.0
+              env:
+                - name: TARGET
+                  value: /ext/mirror/rockylinux
+                - name: SOURCE
+                  value: rsync://mirror.cpsc.ucalgary.ca/rocky
+                - name: LASTUPDATE
+                  value: https://mirror.math.princeton.edu/pub/blackarch/lastupdate
+                - name: FIRST
+                  value: "not"
+              volumeMounts:
+                - name: mirror-pvc
+                  mountPath: /ext/mirror/
+          restartPolicy: OnFailure
+          volumes:
+            - name: mirror-pvc
+              persistentVolumeClaim:
+                claimName: mirror-rockylinux

@@ -56,6 +56,8 @@ spec:
               mountPath: /mnt/kali
             - name: blackarch
               mountPath: /mnt/blackarch
+            - name: rockylinux
+              mountPath: /mnt/rockylinux
       volumes:
         - name: config
           configMap:
@@ -84,4 +86,7 @@ spec:
         - name: blackarch
           persistentVolumeClaim:
             claimName: mirror-blackarch-zfs
+        - name: rockylinux
+          persistentVolumeClim:
+            claimName: mirror-rockylinux
       restartPolicy: Always
