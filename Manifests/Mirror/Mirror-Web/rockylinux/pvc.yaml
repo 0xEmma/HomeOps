@@ -6,9 +6,9 @@ metadata:
   labels:
     app: mirror-rockylinux
 spec:
+  storageClassName: csi-fs-hdd-sc
   accessModes:
     - ReadWriteMany
   resources:
     requests:
-      storageClassName: csi-fs-hdd-sc
       storage: 3000Gi
