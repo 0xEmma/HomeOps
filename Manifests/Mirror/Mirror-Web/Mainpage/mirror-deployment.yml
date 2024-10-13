@@ -23,25 +23,18 @@ spec:
     spec:
       containers:
         - name: mirror
-          image: 0xemma/nginx-autoindex:json-2
+          image: ghcr.io/0xemma/mirror-main:v1.0.0
           resources:
             limits:
-              memory: 8000Mi
+              memory: 800Mi
             requests:
               cpu: 100m
-              memory: 8000Mi
-          volumeMounts:
-            - name: config
-              mountPath: /var/lib/nginx/html
+              memory: 800Mi
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           readinessProbe:
             httpGet:
               path: /
-              port: 80
+              port: 3000
             initialDelaySeconds: 5
             periodSeconds: 10
-      volumes:
-        - name: config
-          configMap:
-            name: caddy-config-mirror
