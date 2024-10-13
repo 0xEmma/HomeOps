@@ -87,6 +87,6 @@ spec:
           persistentVolumeClaim:
             claimName: mirror-blackarch-zfs
         - name: rockylinux
-          persistentVolumeClim:
+          persistentVolumeClaim:
             claimName: mirror-rockylinux
       restartPolicy: Always
