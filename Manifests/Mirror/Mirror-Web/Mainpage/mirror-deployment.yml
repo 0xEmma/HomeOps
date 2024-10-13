@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: mirror
-          image: ghcr.io/0xemma/mirror-main:v1.0.1
+          image: ghcr.io/0xemma/mirror-main:v1.0.2
           resources:
             limits:
               memory: 800Mi
