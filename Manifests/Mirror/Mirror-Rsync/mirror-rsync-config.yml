@@ -42,4 +42,4 @@ data:
     [void]
       path = /mirror/voidlinux
     [rockylinux]
-      path = /mnt/rockylinux
+      path = /mnt/rockylinux/rockylinux
